@@ -10,7 +10,7 @@ class SignInButton extends CustomElevatedButton {
     double heightBtn = 50,
   })  : assert(text != null),
          super(
-            onPressed: () {},
+            onPressed: onPressed,
             child:
                 Text(text, style: TextStyle(color: textColor, fontSize: 15.0)),
             color: color,
