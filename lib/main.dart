@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'app/sign_in/sign_in_page.dart';
+import 'package:test_01/app/landing_page.dart';
 
 void main() async{
   runApp(MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "Test",
       theme: ThemeData(primarySwatch: Colors.indigo),
-      home: SignInPage(),
+      home: LandingPage(),
     );
   }
 }
