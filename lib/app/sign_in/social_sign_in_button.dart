@@ -11,7 +11,7 @@ class SocialSignInButton extends CustomElevatedButton {
     @required pathImage,
   })  : assert(pathImage != null),
         super(
-            onPressed: () {},
+            onPressed: onPressed,
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -60,6 +60,8 @@ dependencies {
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:28.2.1')
 
+    implementation 'com.facebook.android:facebook-login:[8.1)'
+
     // Add the dependencies for the desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 }
