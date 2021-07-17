@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:test_01/custom_elevated_button.dart';
+import 'package:test_01/common_widgets/custom_elevated_button.dart';
 
 class SocialSignInButton extends CustomElevatedButton {
   SocialSignInButton({
-    @required onPressed,
+    required VoidCallback onPressed,
     String text = "hello",
     Color color = Colors.black,
     Color textColor = Colors.purpleAccent,
     double heightBtn = 50,
-    @required pathImage,
+    required pathImage,
   })  : assert(pathImage != null),
         super(
             onPressed: onPressed,

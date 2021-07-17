@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:test_01/app/landing_page.dart';
 import 'package:test_01/services/auth.dart';
 
-void main() async{
+Future<void> main() async{
   runApp(MyApp());
   await Firebase.initializeApp();
 }
