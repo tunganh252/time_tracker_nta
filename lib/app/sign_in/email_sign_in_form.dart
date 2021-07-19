@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:test_01/app/sign_in/validators.dart';
 import 'package:test_01/common_widgets/form_submit_button.dart';
+import 'package:test_01/common_widgets/show_alert_dialog.dart';
 import 'package:test_01/services/auth.dart';
 
 enum EmailSignInFormType { signIn, register }
@@ -43,10 +46,13 @@ class _EmailSignInformState extends State<EmailSignInform> {
       } else if (_formType == EmailSignInFormType.register) {
         await widget.auth.createWithEmailAndPassword(_email, _password);
       }
-
       Navigator.of(context).pop();
     } catch (e) {
-      print(e.toString());
+      showAlertDialog(context,
+          title: "Login failed",
+          content: e.toString(),
+          defaultActionText: "OK",
+          cancelActionText: "Cancel");
     } finally {
       setState(() {
         _loading = false;
