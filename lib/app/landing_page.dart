@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:test_01/app/homePage.dart';
 import 'package:test_01/app/sign_in/sign_in_page.dart';
 import 'package:test_01/services/auth.dart';
+import 'package:test_01/services/auth_provider.dart';
 
 class LandingPage extends StatelessWidget {
   @override

@@ -3,7 +3,7 @@ import 'package:test_01/common_widgets/custom_elevated_button.dart';
 
 class SocialSignInButton extends CustomElevatedButton {
   SocialSignInButton({
-    required VoidCallback onPressed,
+    required onPressed,
     String text = "hello",
     Color color = Colors.black,
     Color textColor = Colors.purpleAccent,
