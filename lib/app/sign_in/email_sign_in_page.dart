@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_01/app/sign_in/email_sign_in_form.dart';
+import 'package:test_01/app/sign_in/email_sign_in_form_stateful.dart';
 import 'package:test_01/services/auth_provider.dart';
 
 class EmailSignInPage extends StatelessWidget {
@@ -15,7 +15,7 @@ class EmailSignInPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            child: EmailSignInform(),
+            child: EmailSignInFormStateful(),
           ),
         ),
       ),
