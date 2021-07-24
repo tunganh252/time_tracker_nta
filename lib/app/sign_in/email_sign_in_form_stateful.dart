@@ -36,7 +36,7 @@ class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
     super.dispose();
   }
 
-  void _submitButton() async {
+  Future<void> _submitButton() async {
     setState(() {
       _submitted = true;
       _loading = true;

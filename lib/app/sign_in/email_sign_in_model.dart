@@ -13,4 +13,19 @@ class EmailSignInModel {
   final EmailSignInFormType formType;
   final bool isLoading;
   final bool submitted;
+
+
+  EmailSignInModel copyWith(
+      {required String email,
+      required String password,
+      required EmailSignInFormType formType,
+      required bool isLoading,
+      required bool submitted}) {
+    return EmailSignInModel(
+        email: email,
+        password: password,
+        formType: formType,
+        isLoading: isLoading,
+        submitted: submitted);
+  }
 }
