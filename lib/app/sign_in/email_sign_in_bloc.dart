@@ -23,7 +23,7 @@ class EmailSignInBloc {
         submitted: true,
         formType: _model.formType,
         email: _model.email,
-        password: _model.email);
+        password: _model.password);
     try {
       await Future.delayed(Duration(seconds: 1));
       if (_model.formType == EmailSignInFormType.signIn) {
@@ -37,9 +37,40 @@ class EmailSignInBloc {
           submitted: _model.submitted,
           formType: _model.formType,
           email: _model.email,
-          password: _model.email);
+          password: _model.password);
       rethrow;
     }
+  }
+
+  void toggleForm() {
+    final formType = _model.formType == EmailSignInFormType.signIn
+        ? EmailSignInFormType.register
+        : EmailSignInFormType.signIn;
+    updateWith(
+      email: '',
+      password: '',
+      formType: formType,
+      isLoading: false,
+      submitted: false,
+    );
+  }
+
+  void updateEmail(String email) {
+    updateWith(
+        email: email,
+        isLoading: _model.isLoading,
+        submitted: _model.submitted,
+        formType: _model.formType,
+        password: _model.password);
+  }
+
+  void updatePassword(String password) {
+    updateWith(
+        email: _model.email,
+        isLoading: _model.isLoading,
+        submitted: _model.submitted,
+        formType: _model.formType,
+        password: password);
   }
 
   void updateWith(
