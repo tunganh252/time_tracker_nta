@@ -38,16 +38,16 @@ class EmailSignInModel with EmailAndPasswordValidators {
   }
 
   EmailSignInModel copyWith(
-      {required String email,
-      required String password,
-      required EmailSignInFormType formType,
-      required bool isLoading,
-      required bool submitted}) {
+      {String? email,
+      String? password,
+      EmailSignInFormType? formType,
+      bool? isLoading,
+      bool? submitted}) {
     return EmailSignInModel(
-        email: email,
-        password: password,
-        formType: formType,
-        isLoading: isLoading,
-        submitted: submitted);
+        email: email ?? this.email,
+        password: password ?? this.password,
+        formType: formType ?? this.formType,
+        isLoading: isLoading ?? this.isLoading,
+        submitted: submitted ?? this.submitted);
   }
 }

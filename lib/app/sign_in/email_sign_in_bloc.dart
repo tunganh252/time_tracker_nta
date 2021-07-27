@@ -18,12 +18,7 @@ class EmailSignInBloc {
   }
 
   Future<void> submitButton() async {
-    updateWith(
-        isLoading: true,
-        submitted: true,
-        formType: _model.formType,
-        email: _model.email,
-        password: _model.password);
+    updateWith(isLoading: true, submitted: true);
     try {
       await Future.delayed(Duration(seconds: 1));
       if (_model.formType == EmailSignInFormType.signIn) {
@@ -32,12 +27,7 @@ class EmailSignInBloc {
         await auth.createWithEmailAndPassword(_model.email, _model.password);
       }
     } catch (e) {
-      updateWith(
-          isLoading: false,
-          submitted: _model.submitted,
-          formType: _model.formType,
-          email: _model.email,
-          password: _model.password);
+      updateWith(isLoading: false);
       rethrow;
     }
   }
@@ -57,35 +47,27 @@ class EmailSignInBloc {
 
   void updateEmail(String email) {
     updateWith(
-        email: email,
-        isLoading: _model.isLoading,
-        submitted: _model.submitted,
-        formType: _model.formType,
-        password: _model.password);
+      email: email,
+    );
   }
 
   void updatePassword(String password) {
-    updateWith(
-        email: _model.email,
-        isLoading: _model.isLoading,
-        submitted: _model.submitted,
-        formType: _model.formType,
-        password: password);
+    updateWith(password: password);
   }
 
   void updateWith(
-      {required String email,
-      required String password,
-      required EmailSignInFormType formType,
-      required bool isLoading,
-      required bool submitted}) {
+      {String? email,
+      String? password,
+      EmailSignInFormType? formType,
+      bool? isLoading,
+      bool? submitted}) {
     // update model
     _model = _model.copyWith(
-        email: email,
-        password: password,
-        formType: formType,
-        isLoading: isLoading,
-        submitted: submitted);
+        email: email ?? _model.email,
+        password: password ?? _model.password,
+        formType: formType ?? _model.formType,
+        isLoading: isLoading ?? _model.isLoading,
+        submitted: submitted ?? _model.submitted);
     // add model to _modelController
     _modelController.add(_model);
   }
