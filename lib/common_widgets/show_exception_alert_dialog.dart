@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:test_01/common_widgets/show_alert_dialog.dart';
 
 Future<void> showExceptionAlertDialog(BuildContext context,
-        {required String title,
+        {
+          required String title,
         required Exception exception,
         required String defaultActionText}) =>
     showAlertDialog(context,
