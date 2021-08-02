@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:test_01/app/home/model/job.dart';
 import 'package:test_01/services/api_path.dart';
+import 'package:test_01/services/firestore_service.dart';
 
 abstract class Database {
   Future<void> createJob(Job job);
@@ -8,29 +8,18 @@ abstract class Database {
   Stream<Iterable<Job>> jobsStream();
 }
 
+String documentIDFromCurrentDate() => DateTime.now().toIso8601String();
+
 class FirestoreDatabase implements Database {
   FirestoreDatabase({required this.uid});
 
   final String uid;
 
-  Future<void> createJob(Job job) =>
-      _setData(path: APIPath.job(uid, 'check'), job: job.toMap());
+  final _service = FirestoreService.instance;
 
-  Stream<Iterable<Job>> jobsStream() {
-    final path = APIPath.jobs(uid);
-    final reference = FirebaseFirestore.instance.collection(path);
-    final snapshots = reference.snapshots();
+  Future<void> createJob(Job job) => _service.setData(
+      path: APIPath.job(uid, documentIDFromCurrentDate()), job: job.toMap());
 
-    return snapshots.map((snapshot) => snapshot.docs
-        .map(
-          (doc) => Job.fromMap(doc.data()),
-        )
-        .toList());
-  }
-
-  Future<void> _setData(
-      {required String path, required Map<String, dynamic> job}) async {
-    final reference = FirebaseFirestore.instance.doc(path);
-    reference.set(job);
-  }
+  Stream<Iterable<Job>> jobsStream() => _service.collectionStream(
+      path: APIPath.jobs(uid), builder: (data) => Job.fromMap(data));
 }
