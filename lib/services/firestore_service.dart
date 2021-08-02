@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
-
   FirestoreService._();
+
   static final instance = FirestoreService._();
 
   Future<void> setData(
@@ -13,13 +13,14 @@ class FirestoreService {
 
   Stream<Iterable<T>> collectionStream<T>(
       {required String path,
-      required T Function(Map<String, dynamic> data) builder}) {
+      required T Function(Map<String, dynamic> data, String documentID)
+          builder}) {
     final reference = FirebaseFirestore.instance.collection(path);
     final snapshots = reference.snapshots();
 
     return snapshots.map((snapshot) => snapshot.docs
         .map(
-          (doc) => builder(doc.data()),
+          (doc) => builder(doc.data(), doc.id),
         )
         .toList());
   }

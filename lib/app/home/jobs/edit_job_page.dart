@@ -2,28 +2,52 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_01/app/home/model/job.dart';
+import 'package:test_01/common_widgets/show_alert_dialog.dart';
 import 'package:test_01/common_widgets/show_exception_alert_dialog.dart';
 import 'package:test_01/services/database.dart';
 
-class AddJobPage extends StatefulWidget {
-  const AddJobPage({Key? key, required this.database}) : super(key: key);
-  final Database database;
+enum TypeAction { create, edit }
 
-  static Future<void> show(BuildContext context) async {
+class EditJobPage extends StatefulWidget {
+  const EditJobPage({
+    Key? key,
+    required this.database,
+    required this.typeAction,
+    required this.job,
+  }) : super(key: key);
+  final Database database;
+  final TypeAction typeAction;
+  final Job job;
+
+  static Future<void> show(
+      BuildContext context, TypeAction typeAction, Job job) async {
     final database = Provider.of<Database>(context, listen: false);
     await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => AddJobPage(database: database),
+        builder: (context) => EditJobPage(
+              database: database,
+              typeAction: typeAction,
+              job: job,
+            ),
         fullscreenDialog: true));
   }
 
   @override
-  _AddJobPageState createState() => _AddJobPageState();
+  _EditJobPageState createState() => _EditJobPageState();
 }
 
-class _AddJobPageState extends State<AddJobPage> {
+class _EditJobPageState extends State<EditJobPage> {
   final _formKey = GlobalKey<FormState>();
   String _name = "";
-  int _ratePerHour = 1;
+  int _ratePerHour = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.typeAction == TypeAction.edit) {
+      _name = widget.job.name;
+      _ratePerHour = widget.job.ratePerHour;
+    }
+  }
 
   bool _validateAndSaveForm() {
     final form = _formKey.currentState;
@@ -37,9 +61,24 @@ class _AddJobPageState extends State<AddJobPage> {
   Future<void> _submit() async {
     if (_validateAndSaveForm()) {
       try {
-        final job = Job(name: _name, ratePerHour: _ratePerHour);
-        await widget.database.createJob(job);
-        Navigator.of(context).pop();
+        final jobs = await widget.database.jobsStream().first;
+        final allNames = jobs.map((item) => item.name).toList();
+
+        if (widget.typeAction == TypeAction.edit) {
+          allNames.remove(widget.job.name);
+        }
+
+        if (allNames.contains(_name)) {
+          showAlertDialog(context,
+              title: "Name already used",
+              content: "Please choose a different job name",
+              defaultActionText: "Oke");
+        } else {
+          final id = widget.job.id ?? documentIDFromCurrentDate();
+          final job = Job(id: id, name: _name, ratePerHour: _ratePerHour);
+          await widget.database.setJob(job);
+          Navigator.of(context).pop();
+        }
       } on FirebaseException catch (e) {
         showExceptionAlertDialog(context,
             title: "Operation failed", exception: e, defaultActionText: "Oke");
@@ -52,7 +91,8 @@ class _AddJobPageState extends State<AddJobPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 2.0,
-        title: Text("New job"),
+        title: Text(
+            widget.typeAction == TypeAction.create ? "New Job" : "Edit Job"),
         actions: [
           TextButton(
               onPressed: _submit,
@@ -92,15 +132,17 @@ class _AddJobPageState extends State<AddJobPage> {
   List<Widget> _buildFormChildren() {
     return [
       TextFormField(
+        initialValue: _name,
         decoration: InputDecoration(labelText: "Job name"),
         onSaved: (value) => _name = value!,
         validator: (value) => value!.isNotEmpty ? null : "Name can\'t be empty",
       ),
       TextFormField(
+          initialValue: '$_ratePerHour',
           decoration: InputDecoration(labelText: "Rate per hour"),
           keyboardType:
               TextInputType.numberWithOptions(signed: false, decimal: false),
-          onSaved: (value) => _ratePerHour = int.parse(value!)),
+          onSaved: (value) => _ratePerHour = int.tryParse(value!)!),
     ];
   }
 }

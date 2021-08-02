@@ -1,12 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_01/app/home/jobs/add_job_page.dart';
+import 'package:test_01/app/home/jobs/edit_job_page.dart';
 import 'package:test_01/app/home/model/job.dart';
 import 'package:test_01/common_widgets/show_alert_dialog.dart';
-import 'package:test_01/common_widgets/show_exception_alert_dialog.dart';
 import 'package:test_01/services/auth.dart';
 import 'package:test_01/services/database.dart';
+
+import 'job_list_title.dart';
 
 class JobsPage extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
@@ -30,18 +30,21 @@ class JobsPage extends StatelessWidget {
     }
   }
 
-  Future<void> _createJob(BuildContext context) async {
-    try {
-      final database = Provider.of<Database>(context, listen: false);
-      await database.createJob(Job(ratePerHour: 10, name: "Hello123"));
-    } on FirebaseException catch (e) {
-      showExceptionAlertDialog(context,
-          title: "Operation failed", exception: e, defaultActionText: "Ok");
-    }
-  }
+  //
+  // Future<void> _createJob(BuildContext context) async {
+  //   try {
+  //     final database = Provider.of<Database>(context, listen: false);
+  //     await database.createJob(Job(ratePerHour: 10, name: "Hello123"));
+  //   } on FirebaseException catch (e) {
+  //     showExceptionAlertDialog(context,
+  //         title: "Operation failed", exception: e, defaultActionText: "Ok");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final job = Job(name: "test", ratePerHour: 1);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Jobs"),
@@ -57,7 +60,7 @@ class JobsPage extends StatelessWidget {
       body: _createContents(context),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => AddJobPage.show(context),
+        onPressed: () => EditJobPage.show(context, TypeAction.create, job),
       ),
     );
   }
@@ -70,10 +73,9 @@ class JobsPage extends StatelessWidget {
         if (snapshot.hasData) {
           final jobs = snapshot.data;
           final children = jobs!
-              .map((job) => Text(
-                    job.name,
-                    style: TextStyle(color: Colors.indigo),
-                  ))
+              .map(
+                (job) => JobListTitle(job: job, onTap: () {}),
+              )
               .toList();
           return ListView(
             children: children,
