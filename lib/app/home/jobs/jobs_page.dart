@@ -7,6 +7,7 @@ import 'package:test_01/services/auth.dart';
 import 'package:test_01/services/database.dart';
 
 import 'job_list_title.dart';
+import 'list_items_builder.dart';
 
 class JobsPage extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
@@ -30,20 +31,10 @@ class JobsPage extends StatelessWidget {
     }
   }
 
-  //
-  // Future<void> _createJob(BuildContext context) async {
-  //   try {
-  //     final database = Provider.of<Database>(context, listen: false);
-  //     await database.createJob(Job(ratePerHour: 10, name: "Hello123"));
-  //   } on FirebaseException catch (e) {
-  //     showExceptionAlertDialog(context,
-  //         title: "Operation failed", exception: e, defaultActionText: "Ok");
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
-    final job = Job(name: "test", ratePerHour: 1);
+    final id = documentIDFromCurrentDate();
+    final job = Job(id: id, name: "test", ratePerHour: 1);
 
     return Scaffold(
       appBar: AppBar(
@@ -67,30 +58,14 @@ class JobsPage extends StatelessWidget {
 
   Widget _createContents(BuildContext context) {
     final database = Provider.of<Database>(context, listen: false);
-    return StreamBuilder<Iterable<Job>>(
+    return StreamBuilder<List<Job>>(
       stream: database.jobsStream(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final jobs = snapshot.data;
-          final children = jobs!
-              .map(
-                (job) => JobListTitle(job: job, onTap: () {}),
-              )
-              .toList();
-          return ListView(
-            children: children,
-          );
-        }
-
-        if (snapshot.hasError) {
-          return Center(
-            child: Text("Some error occurred"),
-          );
-        }
-
-        return Center(
-          child: CircularProgressIndicator(),
-        );
+        return ListItemsBuilder<Job>(
+            snapshot: snapshot,
+            itemBuilder: (context, job) => JobListTitle(
+                job: job,
+                onTap: () => EditJobPage.show(context, TypeAction.edit, job)));
       },
     );
   }

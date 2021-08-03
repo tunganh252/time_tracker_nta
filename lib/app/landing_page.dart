@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:test_01/app/home/jobs/jobs_page.dart';
 import 'package:test_01/app/sign_in/sign_in_page.dart';
 import 'package:test_01/services/auth.dart';
-import 'package:test_01/services/auth_provider.dart';
 import 'package:test_01/services/database.dart';
 
 class LandingPage extends StatelessWidget {

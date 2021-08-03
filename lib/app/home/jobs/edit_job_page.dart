@@ -38,7 +38,7 @@ class EditJobPage extends StatefulWidget {
 class _EditJobPageState extends State<EditJobPage> {
   final _formKey = GlobalKey<FormState>();
   String _name = "";
-  int _ratePerHour = 0;
+  int _ratePerHour = 1;
 
   @override
   void initState() {
@@ -74,7 +74,9 @@ class _EditJobPageState extends State<EditJobPage> {
               content: "Please choose a different job name",
               defaultActionText: "Oke");
         } else {
-          final id = widget.job.id ?? documentIDFromCurrentDate();
+          final id = widget.typeAction == TypeAction.create
+              ? documentIDFromCurrentDate()
+              : widget.job.id;
           final job = Job(id: id, name: _name, ratePerHour: _ratePerHour);
           await widget.database.setJob(job);
           Navigator.of(context).pop();
