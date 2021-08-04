@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_01/app/home/jobs/edit_job_page.dart';
 import 'package:test_01/app/home/model/job.dart';
 import 'package:test_01/common_widgets/show_alert_dialog.dart';
+import 'package:test_01/common_widgets/show_exception_alert_dialog.dart';
 import 'package:test_01/services/auth.dart';
 import 'package:test_01/services/database.dart';
 
@@ -28,6 +30,16 @@ class JobsPage extends StatelessWidget {
 
     if (didRequestSignOut == true) {
       _signOut(context);
+    }
+  }
+
+  Future<void> _delete(BuildContext context, Job job) async {
+    try {
+      final database = Provider.of<Database>(context, listen: false);
+      await database.deleteJob(job);
+    } on FirebaseException catch (e) {
+      showExceptionAlertDialog(context,
+          title: "Operation failed", exception: e, defaultActionText: "Ok");
     }
   }
 
@@ -63,9 +75,18 @@ class JobsPage extends StatelessWidget {
       builder: (context, snapshot) {
         return ListItemsBuilder<Job>(
             snapshot: snapshot,
-            itemBuilder: (context, job) => JobListTitle(
-                job: job,
-                onTap: () => EditJobPage.show(context, TypeAction.edit, job)));
+            itemBuilder: (context, job) => Dismissible(
+                  key: Key('job-${job.id}'),
+                  background: Container(
+                    color: Colors.red,
+                  ),
+                  direction: DismissDirection.endToStart,
+                  onDismissed: (direction) => _delete(context, job),
+                  child: JobListTitle(
+                      job: job,
+                      onTap: () =>
+                          EditJobPage.show(context, TypeAction.edit, job)),
+                ));
       },
     );
   }
