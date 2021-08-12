@@ -1,15 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:test_01/app/sign_in/email_sign_in_change_model.dart';
-import 'package:test_01/common_widgets/form_submit_button.dart';
-import 'package:test_01/common_widgets/show_exception_alert_dialog.dart';
-import 'package:test_01/services/auth.dart';
+import 'package:time_tracker_flutter_course/app/sign_in/email_sign_in_bloc.dart';
+import 'package:time_tracker_flutter_course/app/sign_in/email_sign_in_change_model.dart';
+import 'package:time_tracker_flutter_course/app/sign_in/email_sign_in_model.dart';
+import 'package:time_tracker_flutter_course/common_widgets/form_submit_button.dart';
+import 'package:time_tracker_flutter_course/common_widgets/show_exception_alert_dialog.dart';
+import 'package:time_tracker_flutter_course/services/auth.dart';
 
 class EmailSignInFormChangeNotifier extends StatefulWidget {
-  EmailSignInFormChangeNotifier({Key? key, required this.model})
-      : super(key: key);
-
+  EmailSignInFormChangeNotifier({@required this.model});
   final EmailSignInChangeModel model;
 
   static Widget create(BuildContext context) {
@@ -27,8 +28,7 @@ class EmailSignInFormChangeNotifier extends StatefulWidget {
       _EmailSignInFormChangeNotifierState();
 }
 
-class _EmailSignInFormChangeNotifierState
-    extends State<EmailSignInFormChangeNotifier> {
+class _EmailSignInFormChangeNotifierState extends State<EmailSignInFormChangeNotifier> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
@@ -45,13 +45,16 @@ class _EmailSignInFormChangeNotifierState
     super.dispose();
   }
 
-  Future<void> _submitButton() async {
+  Future<void> _submit() async {
     try {
-      await model.submitButton();
+      await widget.model.submit();
       Navigator.of(context).pop();
     } on FirebaseAuthException catch (e) {
-      showExceptionAlertDialog(context,
-          title: "Login failed", exception: e, defaultActionText: "OK");
+      showExceptionAlertDialog(
+        context,
+        title: 'Sign in failed',
+        exception: e,
+      );
     }
   }
 
@@ -63,7 +66,7 @@ class _EmailSignInFormChangeNotifierState
   }
 
   void _toggleFormType() {
-    model.toggleForm();
+    model.toggleFormType();
     _emailController.clear();
     _passwordController.clear();
   }
@@ -71,34 +74,19 @@ class _EmailSignInFormChangeNotifierState
   List<Widget> _buildChildren() {
     return [
       _buildEmailTextField(),
-      SizedBox(height: 10),
+      SizedBox(height: 8.0),
       _buildPasswordTextField(),
-      SizedBox(height: 15),
+      SizedBox(height: 8.0),
       FormSubmitButton(
-          text: model.primaryButtonText,
-          onPressed: model.submitEnable ? _submitButton : null),
-      SizedBox(height: 15),
-      TextButton(
-          onPressed: model.isLoading ? null : _toggleFormType,
-          child: Text(model.secondaryButtonText))
+        text: model.primaryButtonText,
+        onPressed: model.canSubmit ? _submit : null,
+      ),
+      SizedBox(height: 8.0),
+      FlatButton(
+        child: Text(model.secondaryButtonText),
+        onPressed: !model.isLoading ? _toggleFormType : null,
+      ),
     ];
-  }
-
-  TextField _buildEmailTextField() {
-    return TextField(
-      controller: _emailController,
-      focusNode: _emailFocusNode,
-      decoration: InputDecoration(
-          labelText: "Email",
-          hintText: "tunganh2521999@gmail.com",
-          errorText: model.errorTextEmail),
-      enabled: !model.isLoading,
-      autocorrect: false,
-      onChanged: model.updateEmail,
-      keyboardType: TextInputType.emailAddress,
-      textInputAction: TextInputAction.next,
-      onEditingComplete: () => _emailEditingComplete(),
-    );
   }
 
   TextField _buildPasswordTextField() {
@@ -106,12 +94,32 @@ class _EmailSignInFormChangeNotifierState
       controller: _passwordController,
       focusNode: _passwordFocusNode,
       decoration: InputDecoration(
-          labelText: "Password", errorText: model.errorTextPassword),
-      enabled: !model.isLoading,
+        labelText: 'Password',
+        errorText: model.passwordErrorText,
+        enabled: model.isLoading == false,
+      ),
       obscureText: true,
-      onChanged: model.updatePassword,
       textInputAction: TextInputAction.done,
-      onEditingComplete: _submitButton,
+      onChanged: model.updatePassword,
+      onEditingComplete: _submit,
+    );
+  }
+
+  TextField _buildEmailTextField() {
+    return TextField(
+      controller: _emailController,
+      focusNode: _emailFocusNode,
+      decoration: InputDecoration(
+        labelText: 'Email',
+        hintText: 'test@test.com',
+        errorText: model.emailErrorText,
+        enabled: model.isLoading == false,
+      ),
+      autocorrect: false,
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      onChanged: model.updateEmail,
+      onEditingComplete: () => _emailEditingComplete(),
     );
   }
 

@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:test_01/common_widgets/custom_elevated_button.dart';
+import 'package:time_tracker_flutter_course/common_widgets/custom_raised_button.dart';
 
-class SignInButton extends CustomElevatedButton {
+class SignInButton extends CustomRaisedButton {
   SignInButton({
-    required onPressed,
-    required text,
-    Color color = Colors.black,
-    Color textColor = Colors.purpleAccent,
-    double heightBtn = 50,
-  })  : assert(text != null),
+    Key key,
+    @required String text,
+    Color color,
+    Color textColor,
+    VoidCallback onPressed,
+  }) : assert(text != null),
         super(
-            onPressed: onPressed,
-            child:
-                Text(text, style: TextStyle(color: textColor, fontSize: 15.0)),
-            color: color,
-            borderRadius: 5.0,
-            height: heightBtn);
+          key: key,
+          child: Text(
+            text,
+            style: TextStyle(color: textColor, fontSize: 15.0),
+          ),
+          color: color,
+          onPressed: onPressed,
+        );
 }

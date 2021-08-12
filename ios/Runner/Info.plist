@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>test_01</string>
+	<string>time_tracker_flutter_course</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -46,34 +46,22 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.152768789777-tdtrt9qrdb0scetf2r84diu8csp7a2o4</string>
-				<string>fb206049934785530</string>
+				<string>com.googleusercontent.apps.268042185353-3t962ku1ngjssjnead728eem8lisrimq</string>
+        <string>fb2029919127068190</string>
 			</array>
 		</dict>
 	</array>
-	<key>FacebookAppID</key>
-	<string>206049934785530</string>
-	<key>FacebookClientToken</key>
-	<string>CLIENT-TOKEN</string>
-	<key>FacebookDisplayName</key>
-	<string>Time Tracker</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>fbapi</string>
-		<string>fbapi20130214</string>
-		<string>fbapi20130410</string>
-		<string>fbapi20130702</string>
-		<string>fbapi20131010</string>
-		<string>fbapi20131219</string>
-		<string>fbapi20140410</string>
-		<string>fbapi20140116</string>
-		<string>fbapi20150313</string>
-		<string>fbapi20150629</string>
-		<string>fbapi20160328</string>
-		<string>fbauth</string>
-		<string>fb-messenger-share-api</string>
-		<string>fbauth2</string>
-		<string>fbshareextension</string>
-	</array>
+  <key>FacebookAppID</key>
+  <string>2029919127068190</string>
+  <key>FacebookDisplayName</key>
+  <string>Time Tracker</string>
+  
+  <key>LSApplicationQueriesSchemes</key>
+  <array>
+      <string>fbapi</string>
+      <string>fb-messenger-share-api</string>
+      <string>fbauth2</string>
+      <string>fbshareextension</string>
+  </array>
 </dict>
 </plist>

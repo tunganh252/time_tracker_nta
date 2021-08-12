@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:test_01/common_widgets/custom_elevated_button.dart';
+import 'package:time_tracker_flutter_course/common_widgets/custom_raised_button.dart';
 
-class SocialSignInButton extends CustomElevatedButton {
+class SocialSignInButton extends CustomRaisedButton {
   SocialSignInButton({
-    required onPressed,
-    String text = "hello",
-    Color color = Colors.black,
-    Color textColor = Colors.purpleAccent,
-    double heightBtn = 50,
-    required pathImage,
-  })  : assert(pathImage != null),
+    @required String assetName,
+    @required String text,
+    Color color,
+    Color textColor,
+    VoidCallback onPressed,
+  })  : assert(assetName != null),
+        assert(text != null),
         super(
-            onPressed: onPressed,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.asset(pathImage,
-                      width: 40, height: 40, fit: BoxFit.fill),
-                  Text(text,
-                      style: TextStyle(color: textColor, fontSize: 15.0)),
-                  Opacity(
-                    opacity: 0,
-                  )
-                ]),
-            color: color,
-            borderRadius: 5.0,
-            height: heightBtn);
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Image.asset(assetName),
+              Text(
+                text,
+                style: TextStyle(color: textColor, fontSize: 15.0),
+              ),
+              Opacity(
+                opacity: 0.0,
+                child: Image.asset(assetName),
+              ),
+            ],
+          ),
+          color: color,
+          onPressed: onPressed,
+        );
 }
