@@ -1,6 +1,4 @@
-# Flutter & Firebase Course | Code With Andrea
-
-This repo contains the source code for my [Flutter & Firebase Course](https://nnbd.me/ff) on Udemy.
+# Flutter & Firebase Course
 
 ## Running the project with Firebase
 
